@@ -1,46 +1,65 @@
 <template>
     <div class="min-h-screen flex">
 
-        <!-- LEFT SIDE (BIRU) -->
-        <div class="hidden md:flex w-1/2 bg-[#1E3A8A] text-white flex-col justify-center px-12">
+        <!-- LEFT SIDE (IMAGE + OVERLAY) -->
+        <div class="hidden md:flex w-1/2 relative text-white flex-col justify-center px-12 overflow-hidden">
 
-            <div>
-                <h1 class="text-4xl font-bold text-[#FACC15] mb-4">
+            <!-- BACKGROUND IMAGE -->
+            <img src="/images/image.png" class="absolute inset-0 w-full h-full object-cover" />
+
+            <!-- OVERLAY BIRU -->
+            <div class="absolute inset-0 bg-[#1E3A8A]/80"></div>
+
+            <!-- GRADIENT (KANAN → KIRI FADE) -->
+            <div class="absolute inset-0 bg-gradient-to-l from-[#1E3A8A] via-[#1E3A8A]/60 to-transparent"></div>
+
+            <div class="relative z-10 max-w-md ml-auto">
+
+                <!-- JUDUL -->
+                <h1 class="text-4xl font-bold text-[#FACC15] mb-4 anim-title">
                     MITRA SEJAHTERA
                 </h1>
 
-                <p class="text-lg mb-6 text-gray-200">
+                <!-- DESKRIPSI -->
+                <p class="text-lg mb-6 text-gray-200 anim-desc">
                     Sistem Manajemen Aset & Stok Obat Apotek
                 </p>
 
+                <!-- LIST -->
                 <div class="space-y-3 text-sm text-gray-200">
-                    <p>✔️ Kelola stok obat dengan mudah</p>
-                    <p>✔️ Monitoring aset apotek secara real-time</p>
-                    <p>✔️ Laporan otomatis & akurat</p>
+                    <ul class="space-y-3">
+                        <li class="flex items-center gap-3 anim-item">
+                            <div
+                                class="w-5 h-5 flex items-center justify-center bg-[#FACC15]/20 rounded-full text-[#FACC15] text-xs">
+                                ✓
+                            </div>
+                            <span>Kelola stok obat dengan mudah</span>
+                        </li>
+                        <li class="flex items-center gap-3 anim-item">
+                            <div
+                                class="w-5 h-5 flex items-center justify-center bg-[#FACC15]/20 rounded-full text-[#FACC15] text-xs">
+                                ✓
+                            </div>
+                            <span>Monitoring aset apotek secara real-time</span>
+                        </li>
+                        <li class="flex items-center gap-3 anim-item">
+                            <div
+                                class="w-5 h-5 flex items-center justify-center bg-[#FACC15]/20 rounded-full text-[#FACC15] text-xs">
+                                ✓
+                            </div>
+                            <span>Laporan otomatis & akurat</span>
+                        </li>
+                    </ul>
                 </div>
 
-                <div class="mt-10 text-sm text-gray-300 space-y-1">
-
+                <!-- LOKASI -->
+                <div class="mt-10 text-sm text-gray-300 space-y-1 anim-location">
                     <div class="flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 72 72">
-                            <circle cx="36.446" cy="28.864" r="7.225" fill="#fff" />
-                            <path fill="#d22f27"
-                                d="M52.573 29.11c0-9.315-7.133-16.892-15.903-16.892s-15.903 7.577-15.903 16.896c.002.465.223 11.609 12.96 31.245a3.46 3.46 0 0 0 2.818 1.934c1.84 0 3.094-2.026 3.216-2.232C52.58 40.414 52.58 29.553 52.573 29.11" />
-                            <path fill="#ea5a47"
-                                d="M52.573 29.11c0-9.315-7.133-16.892-15.903-16.892a15 15 0 0 0-3.865.525c8.395.45 15.1 7.823 15.1 16.85c.006.443.006 11.303-12.813 30.95a6 6 0 0 1-.586.797c.52.584 1.257.928 2.04.954c1.839 0 3.093-2.027 3.215-2.233C52.58 40.414 52.58 29.553 52.573 29.11" />
-                            <g fill="none" stroke="#000" stroke-width="2">
-                                <path
-                                    d="M36.545 62.294a3.46 3.46 0 0 1-2.817-1.935C20.99 40.723 20.769 29.58 20.766 29.114c0-9.32 7.134-16.896 15.904-16.896s15.903 7.577 15.903 16.892c.007.444.007 11.304-12.812 30.95c-.122.207-1.377 2.234-3.216 2.234" />
-                                <path d="M36.67 35.914a7.083 7.083 0 1 1 7.083-7.083a7.09 7.09 0 0 1-7.083 7.083" />
-                            </g>
-                        </svg>
-
-                        <span>Jl. Kramat - Sumber</span>
+                        <span>📍</span>
+                        <span>Jl. Kramat - Sumber Kec. Dukupuntang, Kab. Cirebon</span>
                     </div>
-
-                    <p>Kec. Dukupuntang, Kab. Cirebon</p>
-
                 </div>
+
             </div>
 
         </div>
@@ -48,7 +67,7 @@
         <!-- RIGHT SIDE -->
         <div class="flex w-full md:w-1/2 items-center justify-center bg-gray-100 px-6">
 
-            <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+            <div class="login-card bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
 
                 <!-- Header -->
                 <div class="text-center mb-6">
@@ -60,27 +79,31 @@
                     </p>
                 </div>
 
-                <!-- Form -->
-                <form class="space-y-4">
+                <form @submit.prevent="handleLogin" class="space-y-4">
 
+                    <!-- ERROR -->
+                    <div v-if="errorMsg" class="text-red-500 text-sm">
+                        {{ errorMsg }}
+                    </div>
+
+                    <!-- EMAIL -->
                     <div>
                         <label class="block text-sm font-medium text-gray-600">
                             Email
                         </label>
-                        <input type="email" placeholder="you@example.com"
-                            class="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]" />
+                        <input v-model="email" type="email" placeholder="you@example.com"
+                            class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#1E3A8A]" />
                     </div>
 
+                    <!-- PASSWORD -->
                     <div>
                         <label class="block text-sm font-medium text-gray-600">
                             Password
                         </label>
 
-                        <!-- WRAPPER HARUS RELATIVE -->
                         <div class="relative mt-1">
-
-                            <input :type="showPassword ? 'text' : 'password'" placeholder="••••••••"
-                                class="w-full px-4 py-2 border rounded-lg pr-10 focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]" />
+                            <input v-model="password" :type="showPassword ? 'text' : 'password'"
+                                class="w-full px-4 py-2 border rounded-lg pr-10 focus:ring-2 focus:ring-[#1E3A8A]" />
 
                             <!-- ICON -->
                             <button type="button" @click="showPassword = !showPassword"
@@ -97,15 +120,18 @@
                                         d="m18.67 16.973l2.755 2.755l-.849.848L3.85 3.85L4.697 3l2.855 2.855C8.932 5.303 10.432 5 12 5c4.808 0 8.972 2.848 11 7a12.65 12.65 0 0 1-4.33 4.973M8.486 6.79l1.664 1.664a4 4 0 0 1 5.398 5.398l2.255 2.255c1.574-1 2.904-2.403 3.845-4.106C19.686 8.45 16.034 6.2 12 6.2a10.8 10.8 0 0 0-3.514.59m6.152 6.152a2.8 2.8 0 0 0-3.579-3.579zm1.81 5.204c-1.38.552-2.88.855-4.448.855c-4.808 0-8.972-2.848-11-7a12.65 12.65 0 0 1 4.33-4.973l.867.867A11.36 11.36 0 0 0 2.352 12c1.962 3.55 5.614 5.8 9.648 5.8a10.8 10.8 0 0 0 3.514-.59l.934.935zM8.453 10.15l.909.91a2.8 2.8 0 0 0 3.579 3.579l.91.908a4 4 0 0 1-5.398-5.398z" />
                                 </svg>
                             </button>
-
                         </div>
                     </div>
 
-                    <button type="submit"
-                        class="w-full bg-[#FACC15] text-black py-2 rounded-lg font-semibold hover:scale-[1.02] hover:bg-yellow-400 transition">
-                        Login
+                    <!-- BUTTON -->
+                    <button type="submit" :disabled="loading"
+                        class="w-full bg-[#FACC15] py-2 rounded-lg font-semibold hover:scale-[1.02] transition">
+                        <span v-if="loading">Loading...</span>
+                        <span v-else>Login</span>
                     </button>
+
                 </form>
+                <!-- Form -->
 
                 <p class="text-sm text-center text-gray-500 mt-6">
                     © 2026 Mitra Sejahtera
@@ -123,5 +149,76 @@ const showPassword = ref(false)
 useHead({
     title: "Login"
 })
+
+import { onMounted, nextTick } from 'vue'
+import gsap from 'gsap'
+
+onMounted(async () => {
+    await nextTick()
+
+    const tl = gsap.timeline()
+
+    // Judul
+    tl.from('.anim-title', {
+        x: 50,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power3.out'
+    })
+
+    // Deskripsi
+    tl.from('.anim-desc', {
+        x: 50,
+        opacity: 0,
+        duration: 0.6
+    }, '-=0.4')
+
+    // List (stagger)
+    tl.from('.anim-item', {
+        x: 50,
+        opacity: 0,
+        duration: 0.5,
+        stagger: 0.2
+    }, '-=0.3')
+
+    // Lokasi
+    tl.from('.anim-location', {
+        x: 50,
+        opacity: 0,
+        duration: 0.6
+    }, '-=0.3')
+
+    tl.from('.login-card', {
+        y: 60,
+        opacity: 0,
+        scale: 0.9,
+        filter: 'blur(10px)',
+        duration: 1,
+        ease: 'expo.out'
+    })
+})
+
+const email = ref('')
+const password = ref('')
+const loading = ref(false)
+const errorMsg = ref('')
+
+const { login } = useAuth()
+
+const handleLogin = async () => {
+    loading.value = true
+    errorMsg.value = ''
+
+    try {
+        await login(email.value, password.value)
+
+        // redirect ke dashboard
+        navigateTo('/dashboard')
+    } catch (err: any) {
+        errorMsg.value = err.message
+    } finally {
+        loading.value = false
+    }
+}
 
 </script>
