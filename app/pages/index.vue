@@ -153,6 +153,7 @@ useHead({
 import { onMounted, nextTick } from 'vue'
 import gsap from 'gsap'
 
+
 onMounted(async () => {
     await nextTick()
 

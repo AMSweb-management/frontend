@@ -9,9 +9,9 @@
         <!-- MENU -->
         <nav class="flex-1 px-3 space-y-1">
 
-            <NuxtLink to="/admin"
+            <NuxtLink to="/dashboard"
                 class="flex items-center gap-3 px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-slate-100"
-                active-class="bg-emerald-50 text-emerald-700">
+                active-class="bg-blue-50 text-emerald-700">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M13 9V3h8v6zM3 13V3h8v10zm10 8V11h8v10zM3 21v-6h8v6z" />
                 </svg>
@@ -20,21 +20,7 @@
             </NuxtLink>
 
 
-            <NuxtLink to="/admin/adminapotek"
-                class="flex items-center gap-3 px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-slate-100 transition"
-                active-class="bg-emerald-50 text-emerald-700">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" viewBox="0 0 64 64">
-                    <path fill="currentColor"
-                        d="M56.277 20.663a7.294 7.294 0 1 1-14.588 0a7.294 7.294 0 0 1 14.588 0M3.292 6.261V19.49H1.314a.677.677 0 0 1-.679-.678V1.742c0-.578.431-1.048 1.022-1.048h8.747c.59 0 1.022.469 1.022 1.046v1.002h13.523c.378 0 .68.303.68.676v3.838H14.085V6.251c0-.577-.432-1.046-1.024-1.046H4.317c-.592 0-1.024.477-1.024 1.056z" />
-                    <path fill="currentColor"
-                        d="M30.946 27.5a.676.676 0 0 1-.68.676H6.631a.676.676 0 0 1-.679-.677v-17.07c0-.578.431-1.048 1.022-1.048h8.745c.592 0 1.024.469 1.024 1.046v1.002h13.523c.377 0 .68.303.68.676zm-10.484-9.719v-4.026h-4.028v4.026h-4.027v4.028h4.027v4.027h4.028v-4.027h4.027v-4.028zM56.19 29.836a7.31 7.31 0 0 1 7.317 7.31l.015 26.733H38.978V41.718h-.994l-4.526 6.753c-.737 1.005-2.233 1.492-3.426 1.492H19.406a3.197 3.197 0 0 1-3.198-3.193c0-1.76 1.433-3.15 3.198-3.15h9.665l6.705-10.138c1.606-2.452 4.748-3.637 7.277-3.637l13.136-.008z" />
-                </svg>
-
-                <span>Admin Apotek</span>
-            </NuxtLink>
-
-
-            <NuxtLink to="/admin/daftar-apotek"
+            <NuxtLink to="/obat"
                 class="flex items-center gap-3 px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-slate-100"
                 active-class="bg-emerald-50 text-emerald-700">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" viewBox="0 0 48 48">
@@ -47,44 +33,19 @@
                             d="M21.088 36.124c.027.897.57 1.675 1.46 1.79c.393.05.875.086 1.452.086s1.059-.036 1.453-.086c.89-.115 1.432-.893 1.46-1.79c.027-.912.057-2.274.074-4.137c1.863-.017 3.225-.047 4.137-.075c.897-.027 1.675-.57 1.79-1.46c.05-.393.086-.875.086-1.452s-.036-1.059-.086-1.453c-.115-.89-.893-1.432-1.79-1.46a205 205 0 0 0-4.137-.074a201 201 0 0 0-.075-4.137c-.027-.897-.57-1.675-1.46-1.79C25.06 20.036 24.578 20 24 20s-1.059.036-1.453.086c-.89.115-1.432.893-1.46 1.79a205 205 0 0 0-.074 4.137c-1.863.017-3.225.047-4.137.075c-.897.027-1.675.57-1.79 1.46c-.05.393-.086.875-.086 1.452s.036 1.059.086 1.453c.115.89.893 1.432 1.79 1.46c.912.027 2.274.057 4.137.074c.017 1.863.047 3.225.075 4.137" />
                     </g>
                 </svg>
-                Daftar Apotek
+                Daftar Obat
             </NuxtLink>
 
-            <NuxtLink to="/admin/artikel"
+            <NuxtLink to="/barang"
                 class="flex items-center gap-3 px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-slate-100 transition"
                 active-class="bg-emerald-50 text-emerald-700">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" viewBox="0 0 24 24">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                     <path fill="currentColor"
-                        d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h14q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21zm2-4h7v-2H7zm0-4h10v-2H7zm0-4h10V7H7z" />
+                        d="m17.578 4.432l-2-1.05C13.822 2.461 12.944 2 12 2s-1.822.46-3.578 1.382l-.321.169l8.923 5.099l4.016-2.01c-.646-.732-1.688-1.279-3.462-2.21m4.17 3.534l-3.998 2V13a.75.75 0 0 1-1.5 0v-2.286l-3.5 1.75v9.44c.718-.179 1.535-.607 2.828-1.286l2-1.05c2.151-1.129 3.227-1.693 3.825-2.708c.597-1.014.597-2.277.597-4.8v-.117c0-1.893 0-3.076-.252-3.978M11.25 21.904v-9.44l-8.998-4.5C2 8.866 2 10.05 2 11.941v.117c0 2.525 0 3.788.597 4.802c.598 1.015 1.674 1.58 3.825 2.709l2 1.049c1.293.679 2.11 1.107 2.828 1.286M2.96 6.641l9.04 4.52l3.411-1.705l-8.886-5.078l-.103.054c-1.773.93-2.816 1.477-3.462 2.21" />
                 </svg>
-                Artikel
+                Barang Keluar
             </NuxtLink>
 
-            <NuxtLink to="/admin/transaksi"
-                class="flex items-center gap-3 px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-slate-100 transition"
-                active-class="bg-emerald-50 text-emerald-700">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" viewBox="0 0 24 24">
-                    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                        stroke-width="1.5">
-                        <path
-                            d="M4.58 8.607L2 8.454C3.849 3.704 9.158 1 14.333 2.344c5.513 1.433 8.788 6.918 7.314 12.25c-1.219 4.411-5.304 7.337-9.8 7.406" />
-                        <path stroke-dasharray=".5 3" d="M12 22C6.5 22 2 17 2 11" />
-                        <path
-                            d="M13.604 9.722c-.352-.37-1.213-1.237-2.575-.62c-1.361.615-1.577 2.596.482 2.807c.93.095 1.537-.11 2.093.47c.556.582.659 2.198-.761 2.634s-2.341-.284-2.588-.509m1.653-6.484v.79m0 6.337v.873" />
-                    </g>
-                </svg>
-                Riwayat Transaksi
-            </NuxtLink>
-
-            <NuxtLink to="/admin/kontak"
-                class="flex items-center gap-3 px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-slate-100 transition"
-                active-class="bg-emerald-50 text-emerald-700">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" viewBox="0 0 24 24">
-                    <path fill="none" stroke="currentColor" stroke-width="2"
-                        d="M1 2h21v16h-8l-8 4v-4H1zm5 8h1v1H6zm5 0h1v1h-1zm5 0h1v1h-1z" />
-                </svg>
-                Kontak
-            </NuxtLink>
 
         </nav>
 

@@ -4,42 +4,50 @@ export const useAuth = () => {
     const config = useRuntimeConfig()
 
     const user = useState<any>('auth_user', () => null)
+    const token = useCookie<string | null>('auth_token')
 
     const login = async (email: string, password: string) => {
+        const res = await $fetch(`${config.public.apiBase}/login`, {
+            method: 'POST',
+            body: { email, password },
+            headers: {
+                Accept: 'application/json'
+            }
+        })
+
+        token.value = res.token
+        user.value = res.user
+
+        return res
+    }
+
+    const fetchUser = async () => {
+        if (!token.value) return
+
         try {
-            const res = await $fetch(`${config.public.apiBase}/login`, {
-                method: 'POST',
-                body: { email, password }
+            const res = await $fetch(`${config.public.apiBase}/me`, {
+                headers: {
+                    Authorization: `Bearer ${token.value}`
+                }
             })
 
             user.value = res.user
-            localStorage.setItem('user', JSON.stringify(res.user))
-
-            return res
-        } catch (err: any) {
-            throw new Error(err?.data?.message || 'Login gagal')
+        } catch {
+            logout()
         }
     }
 
     const logout = () => {
+        token.value = null
         user.value = null
-        localStorage.removeItem('user')
         navigateTo('/')
-    }
-
-    const initAuth = () => {
-        if (typeof window !== 'undefined') {
-            const stored = localStorage.getItem('user')
-            if (stored) {
-                user.value = JSON.parse(stored)
-            }
-        }
     }
 
     return {
         user,
+        token,
         login,
-        logout,
-        initAuth
+        fetchUser,
+        logout
     }
 }
