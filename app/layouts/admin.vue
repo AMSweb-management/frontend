@@ -1,18 +1,14 @@
 <template>
-    <div class="flex min-h-screen bg-[#1E3A8A]">
+    <div class="min-h-screen bg-[#1E3A8A]">
+        <AdminSidebar class="fixed inset-y-0 left-0 z-30 w-64" />
 
-        <AdminSidebar class="w-64 shrink-0" />
+        <div class="ml-64 min-h-screen flex flex-col">
+            <AdminNavbar class="sticky top-0 z-20 shrink-0" />
 
-        <div class="flex-1 flex flex-col">
-
-            <AdminNavbar class="shrink-0" />
-
-            <main class="flex-1 overflow-y-auto p-8">
+            <main class="flex-1 p-8">
                 <slot />
             </main>
-
         </div>
-
     </div>
 </template>
 
