@@ -1,10 +1,10 @@
 <template>
     <aside
         :class="[
-            'h-screen overflow-y-auto border-r border-slate-200 bg-white text-slate-900 shadow-[18px_0_48px_-42px_rgba(15,23,42,0.35)] transition-transform duration-300',
+            'flex h-[100dvh] flex-col overflow-hidden border-r border-slate-200 bg-white text-slate-900 shadow-[18px_0_48px_-42px_rgba(15,23,42,0.35)] transition-transform duration-300',
             sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         ]">
-        <div class="flex min-h-full flex-col">
+        <div class="flex min-h-0 flex-1 flex-col">
             <div class="border-b border-slate-200 px-5 py-6">
                 <div class="flex items-center justify-between gap-3">
                     <div class="flex items-center gap-3">
@@ -36,12 +36,12 @@
                 </div>
             </div>
 
-            <div class="flex-1 px-4 py-5">
+            <div class="min-h-0 flex-1 overflow-y-auto px-4 py-5">
                 <p class="px-3 text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">
                     Navigasi
                 </p>
 
-                <nav class="mt-4 space-y-2">
+                <nav class="mt-4 space-y-2 pb-6">
                     <NuxtLink v-for="item in menuItems" :key="item.to" :to="item.to"
                         class="group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-sky-50 hover:text-slate-900"
                         active-class="bg-gradient-to-r from-sky-50 via-blue-50 to-cyan-50 text-sky-700 ring-1 ring-sky-200 shadow-sm shadow-sky-100/80"
@@ -60,7 +60,7 @@
                 </nav>
             </div>
 
-            <div class="border-t border-slate-200 p-4">
+            <div class="border-t border-slate-200 bg-white p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
                 <button @click="handleLogout"
                     class="flex w-full items-center justify-center rounded-2xl bg-red-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-red-200/70 transition hover:-translate-y-0.5 hover:bg-red-600">
                     Keluar dari Sistem

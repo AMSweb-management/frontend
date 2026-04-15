@@ -23,7 +23,13 @@ jobs:
             echo "🚀 START DEPLOY FRONTEND"
 
             cd /var/www/frontend
-            git pull origin main
+
+            git fetch --all
+            git reset --hard origin/main 
+
+            # 🔥 BUILD BERSIH
+            rm -rf .output
+            rm -rf node_modules
 
             npm install
             npm run generate
@@ -32,6 +38,9 @@ jobs:
             rm -rf /var/www/frontend/public/*
 
             # copy hasil build (FIXED)
+            cp -r .output/public/. /var/www/frontend/public/
+
+            rm -rf /var/www/frontend/public/*
             cp -r .output/public/. /var/www/frontend/public/
 
             systemctl restart nginx
