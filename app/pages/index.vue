@@ -24,7 +24,7 @@
                             Mitra Sejahtera
                         </p>
                         <h1 class="hero-copy mt-4 max-w-lg text-5xl font-black leading-tight text-white">
-                            Kelola aset dan stok obat dalam satu dashboard.
+                            Kelola aset dan stok obat dalam satu Dashboard.
                         </h1>
                         <p class="hero-copy mt-5 max-w-xl text-lg leading-8 text-blue-100/80">
                             Pantau persediaan, transaksi barang keluar, distributor, dan laporan apotek dengan tampilan yang lebih cepat dan terstruktur.
