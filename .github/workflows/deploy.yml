@@ -24,8 +24,15 @@ jobs:
 
             cd /var/www/frontend
             git pull origin main
+
             npm install
             npm run generate
+
+            # bersihin dulu
+            rm -rf /var/www/frontend/public/*
+
+            # copy hasil build (FIXED)
+            cp -r .output/public/. /var/www/frontend/public/
 
             systemctl restart nginx
 
