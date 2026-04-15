@@ -24,27 +24,21 @@ jobs:
 
             cd /var/www/frontend
 
+            # 🔥 AKTIFKAN NVM
+            export NVM_DIR="$HOME/.nvm"
+            source $NVM_DIR/nvm.sh
+            nvm use 22
+
             git fetch --all
             git reset --hard origin/main
 
-            # 🔥 CLEAN TOTAL
-            rm -rf node_modules
-            rm -rf .output
+            rm -rf node_modules .output
 
-            # 🔥 INSTALL BERSIH
             npm ci
 
-            # 🔥 PASTIKAN NUXT ADA
             npx nuxt --version
 
-            # 🔥 BUILD
             npm run generate
-
-            # 🔥 VALIDASI
-            if [ ! -f ".output/public/index.html" ]; then
-              echo "❌ BUILD FAILED"
-              exit 1
-            fi
 
             systemctl restart nginx
 
