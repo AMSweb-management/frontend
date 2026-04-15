@@ -1,208 +1,305 @@
 <template>
-    <div class="min-h-screen flex">
+    <div class="relative min-h-screen overflow-hidden bg-[#1E3A8A]">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.24),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(250,204,21,0.18),_transparent_24%),linear-gradient(135deg,_#0f172a_0%,_#1d4ed8_52%,_#1e3a8a_100%)] lg:hidden" />
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:42px_42px] opacity-20" />
 
-        <!-- LEFT SIDE (IMAGE + OVERLAY) -->
-        <div class="hidden md:flex w-1/2 relative text-white flex-col justify-center px-12 overflow-hidden">
+        <div class="relative z-10 grid min-h-screen lg:grid-cols-[1.08fr_0.92fr]">
+            <section class="relative hidden overflow-hidden px-10 py-12 text-white lg:flex lg:flex-col lg:justify-between xl:px-16">
+                <img
+                    src="/images/apotek.png"
+                    alt="Apotek Mitra Sejahtera"
+                    class="absolute inset-0 h-full w-full object-cover" />
+                <div class="absolute inset-0 bg-[#1E3A8A]/82" />
+                <div class="absolute inset-0 bg-gradient-to-br from-[#0f172a]/45 via-[#1E3A8A]/35 to-[#1d4ed8]/25" />
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.18),_transparent_26%),radial-gradient(circle_at_bottom_right,_rgba(250,204,21,0.16),_transparent_24%)]" />
 
-            <!-- BACKGROUND IMAGE -->
-            <img src="/images/image.png" class="absolute inset-0 w-full h-full object-cover" />
+                <div class="max-w-xl">
+                    <div class="hero-copy inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-blue-50 backdrop-blur-md">
+                        <span class="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                        Sistem inventori apotek siap digunakan
+                    </div>
 
-            <!-- OVERLAY BIRU -->
-            <div class="absolute inset-0 bg-[#1E3A8A]/80"></div>
+                    <div class="mt-8">
+                        <p class="hero-copy text-sm font-semibold uppercase tracking-[0.35em] text-blue-100/80">
+                            Mitra Sejahtera
+                        </p>
+                        <h1 class="hero-copy mt-4 max-w-lg text-5xl font-black leading-tight text-white">
+                            Kelola aset dan stok obat dalam satu dashboard.
+                        </h1>
+                        <p class="hero-copy mt-5 max-w-xl text-lg leading-8 text-blue-100/80">
+                            Pantau persediaan, transaksi barang keluar, distributor, dan laporan apotek dengan tampilan yang lebih cepat dan terstruktur.
+                        </p>
+                    </div>
 
-            <!-- GRADIENT (KANAN → KIRI FADE) -->
-            <div class="absolute inset-0 bg-gradient-to-l from-[#1E3A8A] via-[#1E3A8A]/60 to-transparent"></div>
-
-            <div class="relative z-10 max-w-md ml-auto">
-
-                <!-- JUDUL -->
-                <h1 class="text-4xl font-bold text-[#FACC15] mb-4 anim-title">
-                    MITRA SEJAHTERA
-                </h1>
-
-                <!-- DESKRIPSI -->
-                <p class="text-lg mb-6 text-gray-200 anim-desc">
-                    Sistem Manajemen Aset & Stok Obat Apotek
-                </p>
-
-                <!-- LIST -->
-                <div class="space-y-3 text-sm text-gray-200">
-                    <ul class="space-y-3">
-                        <li class="flex items-center gap-3 anim-item">
-                            <div
-                                class="w-5 h-5 flex items-center justify-center bg-[#FACC15]/20 rounded-full text-[#FACC15] text-xs">
-                                ✓
-                            </div>
-                            <span>Kelola stok obat dengan mudah</span>
-                        </li>
-                        <li class="flex items-center gap-3 anim-item">
-                            <div
-                                class="w-5 h-5 flex items-center justify-center bg-[#FACC15]/20 rounded-full text-[#FACC15] text-xs">
-                                ✓
-                            </div>
-                            <span>Monitoring aset apotek secara real-time</span>
-                        </li>
-                        <li class="flex items-center gap-3 anim-item">
-                            <div
-                                class="w-5 h-5 flex items-center justify-center bg-[#FACC15]/20 rounded-full text-[#FACC15] text-xs">
-                                ✓
-                            </div>
-                            <span>Laporan otomatis & akurat</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- LOKASI -->
-                <div class="mt-10 text-sm text-gray-300 space-y-1 anim-location">
-                    <div class="flex items-center gap-2">
-                        <span>📍</span>
-                        <span>Jl. Kramat - Sumber Kec. Dukupuntang, Kab. Cirebon</span>
+                    <div class="mt-10 grid gap-4 sm:grid-cols-3">
+                        <div
+                            v-for="item in overviewCards"
+                            :key="item.label"
+                            class="feature-card rounded-3xl border border-white/12 bg-white/10 p-5 backdrop-blur-md">
+                            <p class="text-sm text-blue-100/70">{{ item.label }}</p>
+                            <p class="mt-3 text-2xl font-bold text-white">{{ item.value }}</p>
+                            <p class="mt-2 text-sm text-blue-100/75">{{ item.description }}</p>
+                        </div>
                     </div>
                 </div>
 
-            </div>
+                <div class="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+                    <div class="rounded-[2rem] border border-white/12 bg-white/10 p-6 backdrop-blur-xl">
+                        <p class="hero-copy text-sm font-semibold uppercase tracking-[0.24em] text-blue-100/75">
+                            Keunggulan
+                        </p>
+                        <ul class="mt-5 space-y-4">
+                            <li
+                                v-for="point in highlights"
+                                :key="point"
+                                class="hero-item flex items-start gap-3 text-sm leading-6 text-blue-50/90">
+                                <span class="mt-1 flex h-7 w-7 items-center justify-center rounded-2xl bg-amber-300/20 text-amber-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4" fill="none"
+                                        stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m5 12 5 5L20 7" />
+                                    </svg>
+                                </span>
+                                <span>{{ point }}</span>
+                            </li>
+                        </ul>
+                    </div>
 
-        </div>
-
-        <!-- RIGHT SIDE -->
-        <div class="flex w-full md:w-1/2 items-center justify-center bg-gray-100 px-6">
-
-            <div class="login-card bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
-
-                <!-- Header -->
-                <div class="text-center mb-6">
-                    <h2 class="text-2xl font-bold text-[#1E3A8A]">
-                        Login
-                    </h2>
-                    <p class="text-sm text-gray-500">
-                        Silakan masuk ke sistem
-                    </p>
+                    <div class="rounded-[2rem] border border-white/12 bg-slate-950/25 p-6 backdrop-blur-xl">
+                        <p class="hero-copy text-sm font-semibold uppercase tracking-[0.24em] text-blue-100/75">
+                            Lokasi
+                        </p>
+                        <p class="hero-copy mt-4 text-xl font-semibold text-white">
+                            Apotek Mitra Sejahtera
+                        </p>
+                        <p class="hero-copy mt-3 text-sm leading-7 text-blue-100/80">
+                            Jl. Kramat - Sumber, Kec. Dukupuntang, Kab. Cirebon
+                        </p>
+                        <div class="hero-copy mt-6 rounded-2xl border border-white/12 bg-white/10 px-4 py-3 text-sm text-blue-50/90">
+                            Login untuk masuk ke dashboard admin dan mulai mengelola operasional harian.
+                        </div>
+                    </div>
                 </div>
+            </section>
 
-                <form @submit.prevent="handleLogin" class="space-y-4">
-
-                    <!-- ERROR -->
-                    <div v-if="errorMsg" class="text-red-500 text-sm">
-                        {{ errorMsg }}
-                    </div>
-
-                    <!-- EMAIL -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-600">
-                            Email
-                        </label>
-                        <input v-model="email" type="email" placeholder="you@example.com"
-                            class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#1E3A8A]" />
-                    </div>
-
-                    <!-- PASSWORD -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-600">
-                            Password
-                        </label>
-
-                        <div class="relative mt-1">
-                            <input v-model="password" :type="showPassword ? 'text' : 'password'"
-                                class="w-full px-4 py-2 border rounded-lg pr-10 focus:ring-2 focus:ring-[#1E3A8A]" />
-
-                            <!-- ICON -->
-                            <button type="button" @click="showPassword = !showPassword"
-                                class="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700">
-                                <svg v-if="!showPassword" F xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24">
-                                    <path fill="currentColor" fill-rule="evenodd"
-                                        d="M12 17.8c4.034 0 7.686-2.25 9.648-5.8C19.686 8.45 16.034 6.2 12 6.2S4.314 8.45 2.352 12c1.962 3.55 5.614 5.8 9.648 5.8M12 5c4.808 0 8.972 2.848 11 7c-2.028 4.152-6.192 7-11 7s-8.972-2.848-11-7c2.028-4.152 6.192-7 11-7m0 9.8a2.8 2.8 0 1 0 0-5.6a2.8 2.8 0 0 0 0 5.6m0 1.2a4 4 0 1 1 0-8a4 4 0 0 1 0 8" />
-                                </svg>
-
-                                <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24">
-                                    <path fill="currentColor" fill-rule="evenodd"
-                                        d="m18.67 16.973l2.755 2.755l-.849.848L3.85 3.85L4.697 3l2.855 2.855C8.932 5.303 10.432 5 12 5c4.808 0 8.972 2.848 11 7a12.65 12.65 0 0 1-4.33 4.973M8.486 6.79l1.664 1.664a4 4 0 0 1 5.398 5.398l2.255 2.255c1.574-1 2.904-2.403 3.845-4.106C19.686 8.45 16.034 6.2 12 6.2a10.8 10.8 0 0 0-3.514.59m6.152 6.152a2.8 2.8 0 0 0-3.579-3.579zm1.81 5.204c-1.38.552-2.88.855-4.448.855c-4.808 0-8.972-2.848-11-7a12.65 12.65 0 0 1 4.33-4.973l.867.867A11.36 11.36 0 0 0 2.352 12c1.962 3.55 5.614 5.8 9.648 5.8a10.8 10.8 0 0 0 3.514-.59l.934.935zM8.453 10.15l.909.91a2.8 2.8 0 0 0 3.579 3.579l.91.908a4 4 0 0 1-5.398-5.398z" />
-                                </svg>
-                            </button>
+            <section class="relative flex items-center justify-center bg-[#1E3A8A] px-4 py-8 sm:px-6 lg:px-10">
+                <div class="login-card w-full max-w-xl rounded-[2rem] border border-white/45 bg-white/90 p-6 shadow-[0_35px_90px_-36px_rgba(15,23,42,0.75)] backdrop-blur-2xl sm:p-8">
+                    <div class="flex items-center gap-3 lg:hidden">
+                        <div
+                            class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 via-blue-500 to-indigo-600 text-lg font-bold text-white shadow-lg shadow-blue-200/80">
+                            AMS
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-[0.32em] text-sky-600">
+                                Mitra Sejahtera
+                            </p>
+                            <p class="mt-1 text-lg font-bold text-slate-900">
+                                Asset Management
+                            </p>
                         </div>
                     </div>
 
-                    <!-- BUTTON -->
-                    <button type="submit" :disabled="loading"
-                        class="w-full bg-[#FACC15] py-2 rounded-lg font-semibold hover:scale-[1.02] transition">
-                        <span v-if="loading">Loading...</span>
-                        <span v-else>Login</span>
-                    </button>
+                    <div class="mt-8">
+                        <div class="inline-flex rounded-full bg-sky-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-sky-700">
+                            Admin Login
+                        </div>
+                        <h2 class="mt-4 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
+                            Masuk ke sistem
+                        </h2>
+                        <p class="mt-3 text-sm leading-6 text-slate-500">
+                            Gunakan akun admin Anda untuk mengakses dashboard inventori, transaksi, dan laporan apotek.
+                        </p>
+                    </div>
 
-                </form>
-                <!-- Form -->
+                    <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:hidden">
+                        <div
+                            v-for="item in overviewCards"
+                            :key="`mobile-${item.label}`"
+                            class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                            <p class="text-xs uppercase tracking-[0.2em] text-slate-400">{{ item.label }}</p>
+                            <p class="mt-2 text-lg font-bold text-slate-900">{{ item.value }}</p>
+                        </div>
+                    </div>
 
-                <p class="text-sm text-center text-gray-500 mt-6">
-                    © 2026 Mitra Sejahtera
-                </p>
-            </div>
+                    <form @submit.prevent="handleLogin" class="mt-8 space-y-5">
+                        <div
+                            v-if="errorMsg"
+                            class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
+                            {{ errorMsg }}
+                        </div>
 
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-slate-700">
+                                Email
+                            </label>
+                            <div class="relative">
+                                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="20" height="16" x="2" y="4" rx="2" />
+                                        <path d="m22 7-8.97 5.7a2 2 0 0 1-2.06 0L2 7" />
+                                    </svg>
+                                </span>
+                                <input
+                                    v-model="email"
+                                    type="email"
+                                    autocomplete="email"
+                                    placeholder="admin@mitrasejahtera.id"
+                                    class="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3.5 pl-12 pr-4 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-100" />
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between gap-3">
+                                <label class="text-sm font-semibold text-slate-700">
+                                    Password
+                                </label>
+                                <span class="text-xs text-slate-400">
+                                    Pastikan akun Anda aman
+                                </span>
+                            </div>
+
+                            <div class="relative">
+                                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="11" x="3" y="11" rx="2" />
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                    </svg>
+                                </span>
+
+                                <input
+                                    v-model="password"
+                                    :type="showPassword ? 'text' : 'password'"
+                                    autocomplete="current-password"
+                                    placeholder="Masukkan password"
+                                    class="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3.5 pl-12 pr-14 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-100" />
+
+                                <button
+                                    type="button"
+                                    @click="showPassword = !showPassword"
+                                    class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 transition hover:text-slate-700">
+                                    <svg v-if="!showPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2.062 12.348a1 1 0 0 1 0-.696a10.75 10.75 0 0 1 19.876 0a1 1 0 0 1 0 .696a10.75 10.75 0 0 1-19.876 0" />
+                                        <circle cx="12" cy="12" r="3" />
+                                    </svg>
+
+                                    <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m3 3 18 18" />
+                                        <path d="M10.58 10.58A2 2 0 0 0 13.42 13.42" />
+                                        <path d="M9.88 4.24A10.75 10.75 0 0 1 21.94 11.65a1 1 0 0 1 0 .7a10.8 10.8 0 0 1-3.32 4.62" />
+                                        <path d="M6.61 6.61A10.75 10.75 0 0 0 2.06 11.65a1 1 0 0 0 0 .7A10.75 10.75 0 0 0 12 19a10.8 10.8 0 0 0 4.23-.86" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button
+                            type="submit"
+                            :disabled="loading"
+                            class="group flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-amber-300 via-yellow-300 to-orange-300 px-4 py-3.5 text-sm font-bold text-slate-900 shadow-lg shadow-amber-200/70 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70">
+                            <span v-if="loading">Memproses login...</span>
+                            <span v-else>Masuk ke Dashboard</span>
+                            <svg v-if="!loading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 transition group-hover:translate-x-1" fill="none"
+                                stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14" />
+                                <path d="m13 5 7 7-7 7" />
+                            </svg>
+                        </button>
+                    </form>
+
+                    <div class="mt-8 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-500">
+                        <p class="font-semibold text-slate-700">Akses aman untuk administrator</p>
+                        <p class="mt-1 leading-6">
+                            Pastikan email dan password sesuai dengan akun admin yang telah terdaftar di sistem.
+                        </p>
+                    </div>
+
+                    <p class="mt-6 text-center text-sm text-slate-400">
+                        &copy; 2026 Mitra Sejahtera
+                    </p>
+                </div>
+            </section>
         </div>
-
     </div>
 </template>
 
 <script setup lang="ts">
-
-const showPassword = ref(false)
-useHead({
-    title: "Login"
-})
-
-import { onMounted, nextTick } from 'vue'
+import { nextTick, onMounted } from 'vue'
 import gsap from 'gsap'
 
+useHead({
+    title: 'Login'
+})
+
+const showPassword = ref(false)
+const email = ref('')
+const password = ref('')
+const loading = ref(false)
+const errorMsg = ref('')
+
+const overviewCards = [
+    {
+        label: 'Modul Aktif',
+        value: '4 Modul',
+        description: 'Inventori, transaksi, distributor, dan laporan.'
+    },
+    {
+        label: 'Monitoring',
+        value: 'Realtime',
+        description: 'Pergerakan stok dan aktivitas harian lebih cepat dipantau.'
+    },
+    {
+        label: 'Laporan',
+        value: 'Siap Cetak',
+        description: 'Rekap harian dan bulanan tersedia langsung dari dashboard.'
+    }
+]
+
+const highlights = [
+    'Kelola stok obat dengan alur yang lebih terstruktur dan mudah dipantau.',
+    'Catat barang keluar dan distribusi inventori secara real-time.',
+    'Pantau performa apotek lewat laporan yang siap dilihat dan dicetak.'
+]
 
 onMounted(async () => {
     await nextTick()
 
     const tl = gsap.timeline()
 
-    // Judul
-    tl.from('.anim-title', {
-        x: 50,
+    tl.from('.hero-copy', {
+        y: 24,
         opacity: 0,
-        duration: 0.8,
+        duration: 0.7,
+        stagger: 0.08,
         ease: 'power3.out'
     })
 
-    // Deskripsi
-    tl.from('.anim-desc', {
-        x: 50,
+    tl.from('.feature-card', {
+        y: 28,
         opacity: 0,
-        duration: 0.6
-    }, '-=0.4')
+        duration: 0.55,
+        stagger: 0.1,
+        ease: 'power3.out'
+    }, '-=0.35')
 
-    // List (stagger)
-    tl.from('.anim-item', {
-        x: 50,
+    tl.from('.hero-item', {
+        x: 24,
         opacity: 0,
-        duration: 0.5,
-        stagger: 0.2
-    }, '-=0.3')
-
-    // Lokasi
-    tl.from('.anim-location', {
-        x: 50,
-        opacity: 0,
-        duration: 0.6
-    }, '-=0.3')
+        duration: 0.45,
+        stagger: 0.08,
+        ease: 'power3.out'
+    }, '-=0.35')
 
     tl.from('.login-card', {
-        y: 60,
+        y: 42,
         opacity: 0,
-        scale: 0.9,
-        filter: 'blur(10px)',
-        duration: 1,
+        scale: 0.96,
+        duration: 0.85,
         ease: 'expo.out'
-    })
+    }, '-=0.45')
 })
-
-const email = ref('')
-const password = ref('')
-const loading = ref(false)
-const errorMsg = ref('')
 
 const { login } = useAuth()
 
@@ -212,14 +309,11 @@ const handleLogin = async () => {
 
     try {
         await login(email.value, password.value)
-
-        // redirect ke dashboard
-        navigateTo('/dashboard')
+        await navigateTo('/dashboard')
     } catch (err: any) {
         errorMsg.value = err.message
     } finally {
         loading.value = false
     }
 }
-
 </script>

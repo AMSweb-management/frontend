@@ -1,22 +1,38 @@
 <template>
     <aside
-        class="h-screen overflow-y-auto border-r border-slate-200 bg-white text-slate-900 shadow-[18px_0_48px_-42px_rgba(15,23,42,0.35)]">
+        :class="[
+            'h-screen overflow-y-auto border-r border-slate-200 bg-white text-slate-900 shadow-[18px_0_48px_-42px_rgba(15,23,42,0.35)] transition-transform duration-300',
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        ]">
         <div class="flex min-h-full flex-col">
             <div class="border-b border-slate-200 px-5 py-6">
-                <div class="flex items-center gap-3">
-                    <div
-                        class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 via-blue-500 to-indigo-500 text-lg font-bold text-white shadow-lg shadow-blue-200/70">
-                        AMS
+                <div class="flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 via-blue-500 to-indigo-500 text-lg font-bold text-white shadow-lg shadow-blue-200/70">
+                            AMS
+                        </div>
+
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-[0.28em] text-sky-600">
+                                Admin Panel
+                            </p>
+                            <h2 class="mt-1 text-lg font-bold text-slate-900">
+                                Asset Management
+                            </h2>
+                        </div>
                     </div>
 
-                    <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.28em] text-sky-600">
-                            Admin Panel
-                        </p>
-                        <h2 class="mt-1 text-lg font-bold text-slate-900">
-                            Asset Management
-                        </h2>
-                    </div>
+                    <button
+                        type="button"
+                        class="flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 lg:hidden"
+                        @click="sidebarOpen = false">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6 6 18" />
+                            <path d="m6 6 12 12" />
+                        </svg>
+                    </button>
                 </div>
             </div>
 
@@ -28,7 +44,8 @@
                 <nav class="mt-4 space-y-2">
                     <NuxtLink v-for="item in menuItems" :key="item.to" :to="item.to"
                         class="group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-sky-50 hover:text-slate-900"
-                        active-class="bg-gradient-to-r from-sky-50 via-blue-50 to-cyan-50 text-sky-700 ring-1 ring-sky-200 shadow-sm shadow-sky-100/80">
+                        active-class="bg-gradient-to-r from-sky-50 via-blue-50 to-cyan-50 text-sky-700 ring-1 ring-sky-200 shadow-sm shadow-sky-100/80"
+                        @click="handleNavigate">
                         <span
                             class="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-slate-500 transition group-hover:bg-sky-100 group-hover:text-sky-700">
                             <Icon :icon="item.icon" class="h-5 w-5" />
@@ -56,6 +73,8 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 
+const route = useRoute()
+const sidebarOpen = useState('admin-sidebar-open', () => false)
 
 const menuItems = [
     {
@@ -97,4 +116,12 @@ const handleLogout = () => {
         logout()
     }
 }
+
+const handleNavigate = () => {
+    sidebarOpen.value = false
+}
+
+watch(() => route.path, () => {
+    sidebarOpen.value = false
+})
 </script>

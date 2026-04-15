@@ -1,16 +1,30 @@
 <template>
     <header class="border-b border-blue-900/30 bg-gradient-to-r from-[#27439a] via-[#2d4fb0] to-[#335abf] px-6 py-4 text-white shadow-[0_18px_40px_-28px_rgba(37,69,154,0.9)]">
         <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.24em] text-blue-100/80">
-                    {{ currentSection.badge }}
-                </p>
-                <h1 class="mt-2 text-2xl font-bold text-white">
-                    {{ currentSection.title }}
-                </h1>
-                <p class="mt-1 text-sm text-blue-100/80">
-                    {{ currentSection.description }}
-                </p>
+            <div class="flex items-start gap-3">
+                <button
+                    type="button"
+                    class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-white/10 text-white transition hover:bg-white/15 lg:hidden"
+                    @click="sidebarOpen = true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 12h16" />
+                        <path d="M4 6h16" />
+                        <path d="M4 18h16" />
+                    </svg>
+                </button>
+
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-[0.24em] text-blue-100/80">
+                        {{ currentSection.badge }}
+                    </p>
+                    <h1 class="mt-2 text-2xl font-bold text-white">
+                        {{ currentSection.title }}
+                    </h1>
+                    <p class="mt-1 text-sm text-blue-100/80">
+                        {{ currentSection.description }}
+                    </p>
+                </div>
             </div>
 
             <div class="flex items-center gap-3 md:justify-end">
@@ -45,6 +59,7 @@
 
 <script setup lang="ts">
 const route = useRoute()
+const sidebarOpen = useState('admin-sidebar-open', () => false)
 const { user, fetchUser } = useAuth()
 
 const sectionMap: Record<string, { badge: string; title: string; description: string }> = {
