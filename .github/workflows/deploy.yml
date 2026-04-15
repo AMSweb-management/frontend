@@ -34,15 +34,6 @@ jobs:
             npm install
             npm run generate
 
-            # bersihin dulu
-            rm -rf /var/www/frontend/public/*
-
-            # copy hasil build (FIXED)
-            cp -r .output/public/. /var/www/frontend/public/
-
-            rm -rf /var/www/frontend/public/*
-            cp -r .output/public/. /var/www/frontend/public/
-
             systemctl restart nginx
 
             echo "✅ FRONTEND DEPLOY DONE"
