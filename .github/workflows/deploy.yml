@@ -25,14 +25,26 @@ jobs:
             cd /var/www/frontend
 
             git fetch --all
-            git reset --hard origin/main 
+            git reset --hard origin/main
 
-            # 🔥 BUILD BERSIH
-            rm -rf .output
+            # 🔥 CLEAN TOTAL
             rm -rf node_modules
+            rm -rf .output
 
-            npm install
+            # 🔥 INSTALL BERSIH
+            npm ci
+
+            # 🔥 PASTIKAN NUXT ADA
+            npx nuxt --version
+
+            # 🔥 BUILD
             npm run generate
+
+            # 🔥 VALIDASI
+            if [ ! -f ".output/public/index.html" ]; then
+              echo "❌ BUILD FAILED"
+              exit 1
+            fi
 
             systemctl restart nginx
 
