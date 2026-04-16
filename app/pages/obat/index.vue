@@ -7,8 +7,11 @@
     </div>
 
     <div class="p-6 space-y-6">
-        <section class="relative overflow-hidden rounded-[28px] bg-white/95 shadow-xl shadow-slate-900/10 ring-1 ring-white/60">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(16,185,129,0.16),_transparent_34%),radial-gradient(circle_at_bottom_left,_rgba(59,130,246,0.14),_transparent_32%)]"></div>
+        <section
+            class="relative overflow-hidden rounded-[28px] bg-white/95 shadow-xl shadow-slate-900/10 ring-1 ring-white/60">
+            <div
+                class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(16,185,129,0.16),_transparent_34%),radial-gradient(circle_at_bottom_left,_rgba(59,130,246,0.14),_transparent_32%)]">
+            </div>
 
             <div class="relative p-6 md:p-8">
                 <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
@@ -25,8 +28,7 @@
                         </p>
                     </div>
 
-                    <button
-                        @click="openCreate"
+                    <button @click="openCreate"
                         class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800">
                         + Tambah Obat
                     </button>
@@ -67,7 +69,8 @@
         </section>
 
         <section class="overflow-hidden rounded-[28px] bg-white shadow-xl shadow-slate-900/10 ring-1 ring-slate-200/70">
-            <div class="flex flex-col gap-4 border-b border-slate-100 px-6 py-5 lg:flex-row lg:items-center lg:justify-between">
+            <div
+                class="flex flex-col gap-4 border-b border-slate-100 px-6 py-5 lg:flex-row lg:items-center lg:justify-between">
                 <div>
                     <h2 class="text-xl font-bold text-slate-900">Daftar Obat</h2>
                     <p class="mt-1 text-sm text-slate-500">
@@ -76,9 +79,7 @@
                 </div>
 
                 <div class="relative w-full lg:max-w-sm">
-                    <input
-                        v-model="search"
-                        placeholder="Cari nama obat..."
+                    <input v-model="search" placeholder="Cari nama obat..."
                         class="w-full rounded-2xl border border-slate-200 bg-slate-50 pl-11 pr-4 py-3 text-sm text-slate-700 outline-none transition focus:border-emerald-400 focus:bg-white focus:ring-4 focus:ring-emerald-100" />
                     <span class="absolute left-4 top-3.5 text-slate-400">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
@@ -98,18 +99,18 @@
                             <th class="px-6 py-4 font-semibold">Stok</th>
                             <th class="px-6 py-4 font-semibold">Distributor</th>
                             <th class="px-6 py-4 font-semibold">Harga</th>
+                            <th class="px-6 py-4 font-semibold">Expired</th>
                             <th class="px-6 py-4 font-semibold">Aksi</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        <tr
-                            v-for="item in paginatedObat"
-                            :key="item.id"
+                        <tr v-for="item in paginatedObat" :key="item.id"
                             class="border-t border-slate-100 transition hover:bg-slate-50/80">
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
-                                    <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-100 text-sm font-bold text-emerald-700">
+                                    <div
+                                        class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-100 text-sm font-bold text-emerald-700">
                                         {{ getInitial(item.nama) }}
                                     </div>
 
@@ -125,19 +126,19 @@
                             </td>
 
                             <td class="px-6 py-4">
-                                <span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                                <span
+                                    class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
                                     {{ item.tipe || '-' }}
                                 </span>
                             </td>
 
                             <td class="px-6 py-4">
-                                <span
-                                    :class="[
-                                        'inline-flex rounded-full px-3 py-1 text-xs font-semibold',
-                                        item.stok < 10 ? 'bg-red-100 text-red-600' :
-                                            item.stok < 50 ? 'bg-amber-100 text-amber-700' :
-                                                'bg-emerald-100 text-emerald-700'
-                                    ]">
+                                <span :class="[
+                                    'inline-flex rounded-full px-3 py-1 text-xs font-semibold',
+                                    item.stok < 10 ? 'bg-red-100 text-red-600' :
+                                        item.stok < 50 ? 'bg-amber-100 text-amber-700' :
+                                            'bg-emerald-100 text-emerald-700'
+                                ]">
                                     {{ item.stok }} item
                                 </span>
                             </td>
@@ -151,15 +152,26 @@
                             </td>
 
                             <td class="px-6 py-4">
+                                <span :class="[
+                                    'text-xs font-semibold px-3 py-1 rounded-full',
+                                    isExpired(item.expired_date)
+                                        ? 'bg-red-100 text-red-600'
+                                        : isNearExpired(item.expired_date)
+                                            ? 'bg-amber-100 text-amber-700'
+                                            : 'bg-emerald-100 text-emerald-700'
+                                ]">
+                                    {{ formatDate(item.expired_date) }}
+                                </span>
+                            </td>
+
+                            <td class="px-6 py-4">
                                 <div class="flex items-center gap-2">
-                                    <button
-                                        @click="openEdit(item)"
+                                    <button @click="openEdit(item)"
                                         class="inline-flex items-center rounded-xl border border-sky-200 px-3 py-2 text-xs font-semibold text-sky-700 transition hover:bg-sky-50">
                                         Edit
                                     </button>
 
-                                    <button
-                                        @click="openDelete(item)"
+                                    <button @click="openDelete(item)"
                                         class="inline-flex items-center rounded-xl border border-red-200 px-3 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-50">
                                         Hapus
                                     </button>
@@ -170,14 +182,16 @@
                         <tr v-if="!paginatedObat.length">
                             <td colspan="6" class="px-6 py-14 text-center">
                                 <div class="mx-auto max-w-md">
-                                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-slate-100 text-2xl">
+                                    <div
+                                        class="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-slate-100 text-2xl">
                                         +
                                     </div>
                                     <h3 class="mt-4 text-lg font-semibold text-slate-800">
                                         Data obat belum tersedia
                                     </h3>
                                     <p class="mt-2 text-sm text-slate-500">
-                                        Tambahkan data obat baru atau ubah kata kunci pencarian untuk melihat hasil lain.
+                                        Tambahkan data obat baru atau ubah kata kunci pencarian untuk melihat hasil
+                                        lain.
                                     </p>
                                 </div>
                             </td>
@@ -186,15 +200,14 @@
                 </table>
             </div>
 
-            <div class="flex flex-col gap-4 border-t border-slate-100 px-6 py-5 md:flex-row md:items-center md:justify-between">
+            <div
+                class="flex flex-col gap-4 border-t border-slate-100 px-6 py-5 md:flex-row md:items-center md:justify-between">
                 <p class="text-sm text-slate-500">
                     Navigasi halaman untuk melihat data obat lainnya.
                 </p>
 
                 <div class="flex items-center gap-3">
-                    <button
-                        @click="page--"
-                        :disabled="page === 1"
+                    <button @click="page--" :disabled="page === 1"
                         class="inline-flex items-center rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40">
                         Sebelumnya
                     </button>
@@ -203,9 +216,7 @@
                         Halaman {{ page }} / {{ totalPage || 1 }}
                     </span>
 
-                    <button
-                        @click="page++"
-                        :disabled="page >= totalPage"
+                    <button @click="page++" :disabled="page >= totalPage"
                         class="inline-flex items-center rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40">
                         Berikutnya
                     </button>
@@ -213,7 +224,8 @@
             </div>
         </section>
 
-        <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 px-4 backdrop-blur-sm">
+        <div v-if="showModal"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 px-4 backdrop-blur-sm">
             <div class="w-full max-w-lg overflow-hidden rounded-[28px] bg-white shadow-2xl shadow-slate-950/20">
                 <div class="border-b border-slate-100 bg-slate-50/80 px-6 py-5">
                     <h2 class="text-xl font-bold text-slate-900">
@@ -227,17 +239,14 @@
                 <div class="space-y-4 px-6 py-6">
                     <div>
                         <label class="mb-2 block text-sm font-medium text-slate-700">Nama Obat</label>
-                        <input
-                            v-model="form.nama"
-                            placeholder="Masukkan nama obat"
+                        <input v-model="form.nama" placeholder="Masukkan nama obat"
                             class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100" />
                     </div>
 
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div>
                             <label class="mb-2 block text-sm font-medium text-slate-700">Tipe Obat</label>
-                            <select
-                                v-model="form.tipe"
+                            <select v-model="form.tipe"
                                 class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100">
                                 <option value="">Pilih Tipe</option>
                                 <option>Tablet</option>
@@ -248,8 +257,7 @@
 
                         <div>
                             <label class="mb-2 block text-sm font-medium text-slate-700">Distributor</label>
-                            <select
-                                v-model="form.distributor_id"
+                            <select v-model="form.distributor_id"
                                 class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100">
                                 <option value="">Pilih Distributor</option>
                                 <option v-for="d in distributors" :key="d.id" :value="d.id">
@@ -262,35 +270,33 @@
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div>
                             <label class="mb-2 block text-sm font-medium text-slate-700">Stok</label>
-                            <input
-                                v-model="form.stok"
-                                type="number"
-                                min="0"
-                                placeholder="Masukkan stok"
+                            <input v-model="form.stok" type="number" min="0" placeholder="Masukkan stok"
                                 class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100" />
                         </div>
 
                         <div>
                             <label class="mb-2 block text-sm font-medium text-slate-700">Harga</label>
-                            <input
-                                v-model="form.harga"
-                                type="number"
-                                min="0"
-                                placeholder="Masukkan harga"
+                            <input v-model="form.harga" type="number" min="0" placeholder="Masukkan harga"
                                 class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100" />
                         </div>
+                    </div>
+
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-slate-700">
+                            Expired Date
+                        </label>
+                        <input v-model="form.expired_date" type="date"
+                            class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm" />
                     </div>
                 </div>
 
                 <div class="flex flex-col-reverse gap-3 border-t border-slate-100 px-6 py-5 md:flex-row md:justify-end">
-                    <button
-                        @click="closeModal"
+                    <button @click="closeModal"
                         class="inline-flex items-center justify-center rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50">
                         Batal
                     </button>
 
-                    <button
-                        @click="submitForm"
+                    <button @click="submitForm"
                         class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
                         Simpan Data
                     </button>
@@ -298,7 +304,8 @@
             </div>
         </div>
 
-        <div v-if="showDelete" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 px-4 backdrop-blur-sm">
+        <div v-if="showDelete"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 px-4 backdrop-blur-sm">
             <div class="w-full max-w-sm rounded-[28px] bg-white p-6 text-center shadow-2xl shadow-slate-950/20">
                 <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-3xl bg-red-100 text-red-600">
                     !
@@ -312,14 +319,12 @@
                 </p>
 
                 <div class="mt-6 flex justify-center gap-3">
-                    <button
-                        @click="showDelete = false"
+                    <button @click="showDelete = false"
                         class="inline-flex items-center justify-center rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50">
                         Batal
                     </button>
 
-                    <button
-                        @click="confirmDelete"
+                    <button @click="confirmDelete"
                         class="inline-flex items-center justify-center rounded-2xl bg-red-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-600">
                         Hapus
                     </button>
@@ -356,7 +361,8 @@ const form = ref({
     tipe: '',
     stok: 0,
     harga: 0,
-    distributor_id: ''
+    distributor_id: '',
+    expired_date: ''
 })
 
 const filteredObat = computed(() => {
@@ -407,7 +413,8 @@ const resetForm = () => {
         tipe: '',
         stok: 0,
         harga: 0,
-        distributor_id: ''
+        distributor_id: '',
+        expired_date: ''
     }
 }
 
@@ -436,7 +443,8 @@ const openEdit = (item: any) => {
         tipe: item.tipe,
         stok: item.stok,
         harga: item.harga,
-        distributor_id: item.distributor_id
+        distributor_id: item.distributor_id,
+        expired_date: item.expired_date
     }
 }
 
@@ -468,5 +476,24 @@ const confirmDelete = async () => {
 
     showDelete.value = false
     selectedId.value = null
+}
+
+const formatDate = (date: string) => {
+    if (!date) return '-'
+    return new Date(date).toLocaleDateString('id-ID')
+}
+
+const isExpired = (date: string) => {
+    if (!date) return false
+    return new Date(date) < new Date()
+}
+
+const isNearExpired = (date: string) => {
+    if (!date) return false
+    const now = new Date()
+    const exp = new Date(date)
+
+    const diff = (exp.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+    return diff <= 30 && diff > 0
 }
 </script>
