@@ -12,8 +12,7 @@ export const useAuth = () => {
     const token = useCookie<string | null>('auth_token', {
         maxAge: 60 * 60 * 24 * 7,
         sameSite: 'lax',
-        secure: isProd,
-        domain: isProd ? '.assetmanagementsystem.web.id' : undefined
+        secure: false // 🔥 sementara matikan dulu
     })
 
     const login = async (email: string, password: string) => {
