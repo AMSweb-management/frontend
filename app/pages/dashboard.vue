@@ -37,6 +37,140 @@
             </div>
         </div>
 
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <div class="xl:col-span-2 bg-white p-6 rounded-2xl shadow border border-slate-100 overflow-hidden relative">
+                <div
+                    class="absolute inset-x-0 top-0 h-28 bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-500 opacity-10">
+                </div>
+
+                <div class="relative space-y-6">
+                    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-600">
+                                Grafik Pendapatan
+                            </p>
+                            <h3 class="text-xl font-bold text-slate-800 mt-2">
+                                Pendapatan 7 Hari Terakhir
+                            </h3>
+                            <p class="text-sm text-slate-500 mt-1">
+                                Estimasi pendapatan harian dari jumlah barang keluar dikalikan harga obat.
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 md:min-w-[260px]">
+                            <div class="rounded-xl bg-emerald-50 border border-emerald-100 p-3">
+                                <p class="text-xs text-emerald-700">Total 7 Hari</p>
+                                <p class="text-lg font-bold text-emerald-800">
+                                    Rp {{ formatRupiah(revenueSummary.total) }}
+                                </p>
+                            </div>
+                            <div class="rounded-xl bg-sky-50 border border-sky-100 p-3">
+                                <p class="text-xs text-sky-700">Tertinggi</p>
+                                <p class="text-lg font-bold text-sky-800">{{ revenueSummary.peak }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="h-80">
+                        <div v-if="revenueSeries.some((item) => item.total > 0)"
+                            class="h-full rounded-2xl border border-slate-100 bg-slate-50/70 p-4">
+                            <svg viewBox="0 0 600 220" class="h-[220px] w-full overflow-visible">
+                                <line
+                                    v-for="line in 4"
+                                    :key="line"
+                                    x1="28"
+                                    x2="572"
+                                    :y1="22 + (line - 1) * 58"
+                                    :y2="22 + (line - 1) * 58"
+                                    class="stroke-slate-200"
+                                    stroke-width="1" />
+                                <polyline
+                                    :points="revenueLinePoints"
+                                    fill="none"
+                                    stroke="#10b981"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="5" />
+                                <circle
+                                    v-for="item in revenueSeries"
+                                    :key="item.key"
+                                    :cx="item.point.split(',')[0]"
+                                    :cy="item.point.split(',')[1]"
+                                    r="6"
+                                    class="fill-white stroke-emerald-500"
+                                    stroke-width="4" />
+                            </svg>
+
+                            <div class="grid grid-cols-7 gap-2">
+                                <div v-for="item in revenueSeries" :key="`${item.key}-label`" class="text-center">
+                                    <p class="text-xs font-semibold text-slate-700">{{ item.label }}</p>
+                                    <p class="text-[11px] text-slate-400">{{ item.dateLabel }}</p>
+                                    <p class="mt-1 text-[11px] font-semibold text-emerald-700">
+                                        Rp {{ compactRupiah(item.total) }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div v-else
+                            class="h-full rounded-2xl border border-dashed border-slate-200 bg-slate-50 flex flex-col items-center justify-center text-center px-6">
+                            <p class="text-base font-semibold text-slate-700">
+                                Belum ada pendapatan untuk ditampilkan
+                            </p>
+                            <p class="text-sm text-slate-500 mt-1">
+                                Chart akan terisi setelah transaksi barang keluar memiliki data harga obat.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow border border-slate-100">
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-amber-600">
+                            Peringatan
+                        </p>
+                        <h3 class="font-semibold text-gray-700 mt-2">
+                            Obat Mendekati Kadaluarsa
+                        </h3>
+                    </div>
+
+                    <span class="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
+                        {{ expiringMedicines.length }} item
+                    </span>
+                </div>
+
+                <div v-if="expiringMedicines.length" class="mt-5 space-y-3">
+                    <div
+                        v-for="item in expiringMedicines"
+                        :key="item.id"
+                        class="rounded-2xl border p-4"
+                        :class="item.isExpired ? 'border-red-100 bg-red-50' : 'border-amber-100 bg-amber-50'">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <p class="font-semibold text-slate-800">{{ item.nama }}</p>
+                                <p class="mt-1 text-xs text-slate-500">
+                                    Expired: {{ formatDate(item.expired_date) }}
+                                </p>
+                            </div>
+                            <span
+                                class="shrink-0 rounded-full px-3 py-1 text-xs font-semibold"
+                                :class="item.isExpired ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'">
+                                {{ item.statusLabel }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    v-else
+                    class="mt-5 rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
+                    Tidak ada obat yang kadaluarsa atau mendekati kadaluarsa dalam 30 hari ke depan.
+                </div>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow border border-slate-100 overflow-hidden relative">
                 <div
@@ -189,15 +323,74 @@ useHead({
 const { stats, fetchDashboard } = useDashboard()
 const loadingPage = ref(true)
 const { data, fetchData } = useBarangKeluar()
-const { formatTransactionTime, todayData, weeklySeries, weeklySummary } = useDashboardChart(data)
+const { obats, fetchObat } = useObat()
+const {
+    formatTransactionTime,
+    todayData,
+    weeklySeries,
+    weeklySummary,
+    revenueSeries,
+    revenueSummary
+} = useDashboardChart(data)
 
 const formatRupiah = (val: number) => {
     return new Intl.NumberFormat('id-ID').format(val)
 }
 
+const compactRupiah = (value: number) => {
+    return new Intl.NumberFormat('id-ID', {
+        notation: 'compact',
+        maximumFractionDigits: 1
+    }).format(value)
+}
+
+const revenueLinePoints = computed(() => {
+    return revenueSeries.value.map((item) => item.linePoint).join(' ')
+})
+
+const formatDate = (date: string) => {
+    if (!date) return '-'
+    return new Date(date).toLocaleDateString('id-ID', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+    })
+}
+
+const expiringMedicines = computed(() => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    return obats.value
+        .filter((item: any) => item.expired_date)
+        .map((item: any) => {
+            const expiredDate = new Date(item.expired_date)
+            expiredDate.setHours(0, 0, 0, 0)
+
+            const daysLeft = Math.ceil((expiredDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+            const isExpired = daysLeft < 0
+
+            return {
+                ...item,
+                daysLeft,
+                isExpired,
+                statusLabel: isExpired
+                    ? 'Sudah expired'
+                    : `${daysLeft} hari lagi`
+            }
+        })
+        .filter((item: any) => item.isExpired || item.daysLeft <= 30)
+        .sort((a: any, b: any) => a.daysLeft - b.daysLeft)
+        .slice(0, 5)
+})
+
 onMounted(async () => {
-    await fetchData(1)
-    await fetchDashboard()
+    await Promise.all([
+        fetchData(1),
+        fetchDashboard(),
+        fetchObat()
+    ])
+
     setTimeout(() => {
         loadingPage.value = false
     }, 500)

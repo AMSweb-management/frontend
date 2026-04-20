@@ -123,8 +123,19 @@
                     <form @submit.prevent="handleLogin" class="mt-8 space-y-5">
                         <div
                             v-if="errorMsg"
-                            class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
-                            {{ errorMsg }}
+                            class="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                            <span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4" fill="none"
+                                    stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 9v4" />
+                                    <path d="M12 17h.01" />
+                                    <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" />
+                                </svg>
+                            </span>
+                            <div>
+                                <p class="font-semibold">Login belum berhasil</p>
+                                <p class="mt-1 leading-5">{{ errorMsg }}</p>
+                            </div>
                         </div>
 
                         <div class="space-y-2">
@@ -238,6 +249,7 @@ const email = ref('')
 const password = ref('')
 const loading = ref(false)
 const errorMsg = ref('')
+const { getFriendlyErrorMessage } = useFriendlyError()
 
 const overviewCards = [
     {
@@ -311,7 +323,7 @@ const handleLogin = async () => {
         await login(email.value, password.value)
         await navigateTo('/dashboard')
     } catch (err: any) {
-        errorMsg.value = err.message
+        errorMsg.value = getFriendlyErrorMessage(err, 'Login belum berhasil. Silakan periksa email dan password Anda.')
     } finally {
         loading.value = false
     }
