@@ -12,7 +12,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
         }
     }
 
-    // ⬇️ PENTING: cek setelah fetch selesai
+    
     if (!token.value) {
         return navigateTo('/')
     }

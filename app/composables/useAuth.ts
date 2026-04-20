@@ -5,15 +5,11 @@ export const useAuth = () => {
 
     const user = useState<any>('auth_user', () => null)
 
-    const isProd =
-        typeof window !== 'undefined' &&
-        window.location.hostname !== 'localhost'
-
     const token = useCookie<string | null>('auth_token', {
         maxAge: 60 * 60 * 24 * 7,
         sameSite: 'lax',
-        secure: isProd,
-        domain: isProd ? '.assetmanagementsystem.web.id' : undefined
+        secure: !import.meta.dev,
+        path: '/'
     })
 
     const login = async (email: string, password: string) => {
@@ -46,8 +42,10 @@ export const useAuth = () => {
             })
 
             user.value = res.user
-        } catch {
-            logout()
+        } catch (err) {
+            token.value = null
+            user.value = null
+            throw err
         } finally {
             isLoading.value = false
         }
@@ -64,6 +62,7 @@ export const useAuth = () => {
         token,
         login,
         fetchUser,
-        logout
+        logout,
+        isLoading
     }
 }
