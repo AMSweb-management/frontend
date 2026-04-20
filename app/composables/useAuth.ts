@@ -12,7 +12,8 @@ export const useAuth = () => {
     const token = useCookie<string | null>('auth_token', {
         maxAge: 60 * 60 * 24 * 7,
         sameSite: 'lax',
-        secure: false // 🔥 sementara matikan dulu
+        secure: false,
+        path: '/' // 🔥 WAJIB TAMBAH
     })
 
     const login = async (email: string, password: string) => {
@@ -49,13 +50,22 @@ export const useAuth = () => {
     const isLoggingOut = useState('is_logging_out', () => false)
 
     const logout = () => {
-        isLoggingOut.value = true
+        const cookie = useCookie('auth_token')
 
-        token.value = null
+        // hapus via Nuxt
+        cookie.value = null
+
+        // 🔥 paksa hapus manual semua kemungkinan
+        document.cookie = "auth_token=; Max-Age=0; path=/;"
+        document.cookie = "auth_token=; Max-Age=0; path=/; domain=.assetmanagementsystem.web.id"
+
+        // reset state
         user.value = null
 
-        navigateTo('/')
+        // 🔥 hard redirect (hindari middleware race)
+        window.location.href = '/'
     }
+
     return {
         user,
         token,
