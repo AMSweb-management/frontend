@@ -46,12 +46,16 @@ export const useAuth = () => {
         }
     }
 
+    const isLoggingOut = useState('is_logging_out', () => false)
+
     const logout = () => {
+        isLoggingOut.value = true
+
         token.value = null
         user.value = null
+
         navigateTo('/')
     }
-
     return {
         user,
         token,
