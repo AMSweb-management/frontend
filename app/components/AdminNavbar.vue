@@ -28,8 +28,10 @@
             </div>
 
             <div class="flex items-center gap-3 md:justify-end">
-                <div class="relative">
-                    <button @click="openNotif = !openNotif"
+                <div ref="notifContainer" class="relative">
+                    <button
+                        type="button"
+                        @click="openNotif = !openNotif"
                         class="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-white/20 bg-white text-slate-700 shadow-lg">
 
                         <!-- Bell Icon -->
@@ -47,47 +49,60 @@
                     </button>
 
                     <!-- Dropdown -->
-                    <div v-if="openNotif"
-                        class="absolute right-0 mt-2 w-72 rounded-2xl bg-white shadow-xl border p-3 z-50">
+                    <div
+                        v-if="openNotif"
+                        class="absolute left-0 right-0 top-[calc(100%+0.75rem)] z-50 w-[min(20rem,calc(100vw-3rem))] rounded-2xl border border-slate-200 bg-white p-3 shadow-xl shadow-slate-900/15 sm:left-auto sm:right-0 sm:w-80">
 
-                        <div class="flex items-center justify-between mb-2">
+                        <div class="mb-2 flex items-center justify-between gap-3">
                             <p class="text-sm font-semibold text-slate-700">
                                 Stok Menipis
                             </p>
 
-                            <button v-if="total > 0" @click="markAsRead" class="text-xs text-blue-600 hover:underline">
+                            <button
+                                v-if="total > 0"
+                                type="button"
+                                @click="handleMarkAsRead"
+                                class="shrink-0 text-xs font-medium text-blue-600 hover:underline">
                                 Tandai dibaca
                             </button>
                         </div>
+
                         <div v-if="notifications.length === 0" class="text-sm text-slate-400">
                             Tidak ada notif
                         </div>
-                        <div v-for="item in notifications" :key="item.id"
-                            class="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-slate-50">
 
-                            <div>
-                                <p class="text-sm font-medium text-slate-700">
-                                    {{ item.nama }}
-                                </p>
+                        <div class="max-h-[min(22rem,60vh)] space-y-2 overflow-y-auto pr-1">
+                            <div
+                                v-for="item in notifications"
+                                :key="item.id"
+                                class="flex items-start justify-between gap-3 rounded-xl px-2 py-2 transition hover:bg-slate-50">
 
-                                <div class="text-xs space-y-1">
-                                    <p v-for="(msg, i) in item.messages" :key="i" :class="item.types[i] === 'low_stock'
-                                        ? 'text-red-500'
-                                        : 'text-amber-500'">
-                                        {{ msg }}
+                                <div class="min-w-0 flex-1">
+                                    <p class="truncate text-sm font-medium text-slate-700">
+                                        {{ item.nama }}
                                     </p>
+
+                                    <div class="mt-1 space-y-1 text-xs">
+                                        <p v-for="(msg, i) in item.messages" :key="i" :class="item.types[i] === 'low_stock'
+                                            ? 'text-red-500'
+                                            : 'text-amber-500'">
+                                            {{ msg }}
+                                        </p>
+                                    </div>
                                 </div>
+
+                                <span
+                                    v-if="item.types.includes('low_stock')"
+                                    class="shrink-0 rounded-lg bg-red-500 px-2 py-1 text-xs font-semibold text-white">
+                                    {{ item.stok }}
+                                </span>
+
+                                <span
+                                    v-else-if="item.types.includes('expired')"
+                                    class="shrink-0 rounded-lg bg-amber-500 px-2 py-1 text-xs font-semibold text-white">
+                                    {{ formatDate(item.expired_date) }}
+                                </span>
                             </div>
-
-                            <span v-if="item.types.includes('low_stock')"
-                                class="bg-red-500 text-white px-2 py-1 text-xs rounded">
-                                {{ item.stok }}
-                            </span>
-
-                            <span v-else-if="item.types.includes('expired')"
-                                class="bg-amber-500 text-white px-2 py-1 text-xs rounded">
-                                {{ formatDate(item.expired_date) }}
-                            </span>
                         </div>
                     </div>
                 </div>
@@ -117,6 +132,7 @@
 const route = useRoute()
 const sidebarOpen = useState('admin-sidebar-open', () => false)
 const { user, fetchUser } = useAuth()
+const notifContainer = ref<HTMLElement | null>(null)
 
 const sectionMap: Record<string, { badge: string; title: string; description: string }> = {
     '/dashboard': {
@@ -149,9 +165,32 @@ const sectionMap: Record<string, { badge: string; title: string; description: st
 const openNotif = ref(false)
 const { notifications, total, fetchNotifications, markAsRead } = useNotification()
 
+const handleMarkAsRead = async () => {
+    await markAsRead()
+    openNotif.value = false
+}
+
+const handleOutsideClick = (event: MouseEvent) => {
+    if (!notifContainer.value) {
+        return
+    }
+
+    if (!notifContainer.value.contains(event.target as Node)) {
+        openNotif.value = false
+    }
+}
+
+const handleEscape = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+        openNotif.value = false
+    }
+}
+
 onMounted(() => {
     fetchUser()
     fetchNotifications()
+    window.addEventListener('click', handleOutsideClick)
+    window.addEventListener('keydown', handleEscape)
 })
 
 const currentSection = computed(() => {
@@ -167,7 +206,8 @@ const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString('id-ID')
 }
 
-onMounted(() => {
-    fetchUser()
+onBeforeUnmount(() => {
+    window.removeEventListener('click', handleOutsideClick)
+    window.removeEventListener('keydown', handleEscape)
 })
 </script>
