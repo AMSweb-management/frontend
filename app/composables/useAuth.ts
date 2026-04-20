@@ -4,7 +4,12 @@ export const useAuth = () => {
     const config = useRuntimeConfig()
 
     const user = useState<any>('auth_user', () => null)
-    const token = useCookie<string | null>('auth_token')
+
+    const token = useCookie<string | null>('auth_token', {
+        maxAge: 60 * 60 * 24 * 7,
+        sameSite: 'lax',
+        secure: true
+    })
 
     const login = async (email: string, password: string) => {
         const res = await $fetch(`${config.public.apiBase}/login`, {
