@@ -11,6 +11,7 @@ export const useAuth = () => {
         secure: !import.meta.dev,
         path: '/'
     })
+    const getBearerToken = () => token.value ? decodeURIComponent(token.value) : ''
 
     const login = async (email: string, password: string) => {
         const res = await $fetch(`${config.public.apiBase}/login`, {
@@ -37,7 +38,8 @@ export const useAuth = () => {
         try {
             const res = await $fetch(`${config.public.apiBase}/me`, {
                 headers: {
-                    Authorization: `Bearer ${token.value}`
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${getBearerToken()}`
                 }
             })
 
