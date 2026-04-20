@@ -3,7 +3,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
     if (to.path === '/') return
 
-    // kalau ada token tapi user kosong → fetch ulang
+    // kalau ada token tapi user belum ada → ambil user
     if (!user.value && token.value) {
         try {
             await fetchUser()
@@ -12,8 +12,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
         }
     }
 
-    // kalau tetap kosong → logout
-    if (!user.value) {
+    // ⬇️ PENTING: cek setelah fetch selesai
+    if (!token.value) {
         return navigateTo('/')
     }
 })

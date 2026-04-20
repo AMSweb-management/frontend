@@ -31,8 +31,12 @@ export const useAuth = () => {
         return res
     }
 
+    const isLoading = useState('auth_loading', () => false)
+
     const fetchUser = async () => {
         if (!token.value) return
+
+        isLoading.value = true
 
         try {
             const res = await $fetch(`${config.public.apiBase}/me`, {
@@ -44,6 +48,8 @@ export const useAuth = () => {
             user.value = res.user
         } catch {
             logout()
+        } finally {
+            isLoading.value = false
         }
     }
 
