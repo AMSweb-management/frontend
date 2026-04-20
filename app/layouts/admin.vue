@@ -19,18 +19,9 @@
 
 <script setup lang="ts">
 const sidebarOpen = useState('admin-sidebar-open', () => false)
-const { token, fetchUser } = useAuth()
+// const { fetchUser } = useAuth()
 
-onMounted(async () => {
-    if (!token.value) {
-        await navigateTo('/')
-        return
-    }
-
-    try {
-        await fetchUser()
-    } catch {
-        await navigateTo('/')
-    }
-})
+// onMounted(() => {
+//     fetchUser()
+// })
 </script>

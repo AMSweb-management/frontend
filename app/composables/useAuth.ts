@@ -5,13 +5,16 @@ export const useAuth = () => {
 
     const user = useState<any>('auth_user', () => null)
 
+    const isProd =
+        typeof window !== 'undefined' &&
+        window.location.hostname !== 'localhost'
+
     const token = useCookie<string | null>('auth_token', {
         maxAge: 60 * 60 * 24 * 7,
         sameSite: 'lax',
-        secure: !import.meta.dev,
-        path: '/'
+        secure: isProd,
+        domain: isProd ? '.assetmanagementsystem.web.id' : undefined
     })
-    const getBearerToken = () => token.value ? decodeURIComponent(token.value) : ''
 
     const login = async (email: string, password: string) => {
         const res = await $fetch(`${config.public.apiBase}/login`, {
@@ -28,28 +31,19 @@ export const useAuth = () => {
         return res
     }
 
-    const isLoading = useState('auth_loading', () => false)
-
     const fetchUser = async () => {
         if (!token.value) return
-
-        isLoading.value = true
 
         try {
             const res = await $fetch(`${config.public.apiBase}/me`, {
                 headers: {
-                    Accept: 'application/json',
-                    Authorization: `Bearer ${getBearerToken()}`
+                    Authorization: `Bearer ${token.value}`
                 }
             })
 
             user.value = res.user
-        } catch (err) {
-            token.value = null
-            user.value = null
-            throw err
-        } finally {
-            isLoading.value = false
+        } catch {
+            logout()
         }
     }
 
@@ -64,7 +58,6 @@ export const useAuth = () => {
         token,
         login,
         fetchUser,
-        logout,
-        isLoading
+        logout
     }
 }
