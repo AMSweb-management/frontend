@@ -175,6 +175,12 @@
                 </div>
 
                 <div class="space-y-4 px-6 py-6">
+                    <div
+                        v-if="errorMsg"
+                        class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                        {{ errorMsg }}
+                    </div>
+
                     <div>
                         <label class="mb-2 block text-sm font-medium text-slate-700">Pilih Obat</label>
                         <select
@@ -182,9 +188,12 @@
                             class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100">
                             <option value="">Pilih Obat</option>
                             <option v-for="item in obats" :key="item.id" :value="item.id">
-                                {{ item.nama }}
+                                {{ item.nama }} - stok {{ Number(item.stok || 0) }}
                             </option>
                         </select>
+                        <p v-if="selectedObat" class="mt-2 text-xs" :class="selectedObatOutOfStock ? 'text-red-600' : 'text-slate-500'">
+                            {{ stockStatusText }}
+                        </p>
                     </div>
 
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -194,8 +203,14 @@
                                 v-model="form.jumlah"
                                 type="number"
                                 min="1"
+                                step="1"
+                                :max="availableStock || undefined"
+                                @input="sanitizeJumlahInput"
                                 placeholder="Masukkan jumlah"
                                 class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100" />
+                            <p v-if="jumlahError" class="mt-2 text-xs text-red-600">
+                                {{ jumlahError }}
+                            </p>
                         </div>
 
                         <div>
@@ -210,14 +225,15 @@
 
                 <div class="flex flex-col-reverse gap-3 border-t border-slate-100 px-6 py-5 md:flex-row md:justify-end">
                     <button
-                        @click="showModal = false"
+                        @click="closeModal"
                         class="inline-flex items-center justify-center rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50">
                         Batal
                     </button>
                     <button
                         @click="submit"
-                        class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
-                        Simpan Data
+                        :disabled="!canSubmit || submitting"
+                        class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50">
+                        {{ submitting ? 'Menyimpan...' : 'Simpan Data' }}
                     </button>
                 </div>
             </div>
@@ -235,6 +251,9 @@ useHead({
 const { data, fetchData, createData, pagination } = useBarangKeluar()
 const { obats, fetchObat } = useObat()
 const loadingPage = ref(true)
+const submitting = ref(false)
+const errorMsg = ref('')
+const { getFriendlyErrorMessage } = useFriendlyError()
 
 const safePagination = computed(() => ({
     current_page: pagination.value?.current_page || 1,
@@ -291,13 +310,123 @@ const form = ref({
     tanggal: ''
 })
 
-const submit = async () => {
-    await createData(form.value)
-    showModal.value = false
+const selectedObat = computed(() => {
+    return obats.value.find((item: any) => item.id === form.value.obat_id) || null
+})
+
+const availableStock = computed(() => {
+    return Number(selectedObat.value?.stok || 0)
+})
+
+const selectedObatOutOfStock = computed(() => {
+    return !!selectedObat.value && availableStock.value <= 0
+})
+
+const normalizedJumlah = computed(() => {
+    return Number(form.value.jumlah || 0)
+})
+
+const jumlahError = computed(() => {
+    if (!form.value.obat_id) {
+        return ''
+    }
+
+    if (selectedObatOutOfStock.value) {
+        return 'Stok obat ini sudah habis dan tidak bisa diproses untuk barang keluar.'
+    }
+
+    if (!Number.isInteger(normalizedJumlah.value) || normalizedJumlah.value <= 0) {
+        return 'Jumlah barang keluar harus berupa angka bulat minimal 1.'
+    }
+
+    if (normalizedJumlah.value > availableStock.value) {
+        return `Jumlah melebihi stok yang tersedia. Maksimal ${availableStock.value} item.`
+    }
+
+    return ''
+})
+
+const stockStatusText = computed(() => {
+    if (!selectedObat.value) {
+        return ''
+    }
+
+    if (selectedObatOutOfStock.value) {
+        return 'Stok obat ini sudah habis.'
+    }
+
+    return `Stok tersedia saat ini: ${availableStock.value} item.`
+})
+
+const canSubmit = computed(() => {
+    return !!form.value.obat_id && !jumlahError.value
+})
+
+const resetForm = () => {
     form.value = {
         obat_id: '',
         jumlah: 0,
         tanggal: ''
+    }
+}
+
+const closeModal = () => {
+    showModal.value = false
+    errorMsg.value = ''
+    resetForm()
+}
+
+const sanitizeJumlahInput = () => {
+    const parsedValue = Math.trunc(Number(form.value.jumlah || 0))
+
+    if (!Number.isFinite(parsedValue) || parsedValue < 0) {
+        form.value.jumlah = 0
+        return
+    }
+
+    if (availableStock.value > 0 && parsedValue > availableStock.value) {
+        form.value.jumlah = availableStock.value
+        return
+    }
+
+    form.value.jumlah = parsedValue
+}
+
+watch(() => form.value.obat_id, () => {
+    errorMsg.value = ''
+
+    if (availableStock.value <= 0) {
+        form.value.jumlah = 0
+        return
+    }
+
+    if (normalizedJumlah.value > availableStock.value) {
+        form.value.jumlah = availableStock.value
+    }
+})
+
+const submit = async () => {
+    errorMsg.value = ''
+    sanitizeJumlahInput()
+
+    if (!canSubmit.value) {
+        errorMsg.value = jumlahError.value || 'Data barang keluar belum valid.'
+        return
+    }
+
+    submitting.value = true
+
+    try {
+        await createData({
+            ...form.value,
+            jumlah: normalizedJumlah.value
+        })
+        await fetchObat()
+        closeModal()
+    } catch (error) {
+        errorMsg.value = getFriendlyErrorMessage(error, 'Barang keluar belum berhasil disimpan.')
+    } finally {
+        submitting.value = false
     }
 }
 </script>

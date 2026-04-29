@@ -237,6 +237,12 @@
                 </div>
 
                 <div class="space-y-4 px-6 py-6">
+                    <div
+                        v-if="errorMsg"
+                        class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                        {{ errorMsg }}
+                    </div>
+
                     <div>
                         <label class="mb-2 block text-sm font-medium text-slate-700">Nama Obat</label>
                         <input v-model="form.nama" placeholder="Masukkan nama obat"
@@ -270,13 +276,15 @@
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div>
                             <label class="mb-2 block text-sm font-medium text-slate-700">Stok</label>
-                            <input v-model="form.stok" type="number" min="0" placeholder="Masukkan stok"
+                            <input v-model="form.stok" type="number" min="0" step="1" @input="sanitizeStok"
+                                placeholder="Masukkan stok"
                                 class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100" />
                         </div>
 
                         <div>
                             <label class="mb-2 block text-sm font-medium text-slate-700">Harga</label>
-                            <input v-model="form.harga" type="number" min="0" placeholder="Masukkan harga"
+                            <input v-model="form.harga" type="number" min="0" step="1" @input="sanitizeHarga"
+                                placeholder="Masukkan harga"
                                 class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100" />
                         </div>
                     </div>
@@ -297,8 +305,9 @@
                     </button>
 
                     <button @click="submitForm"
-                        class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
-                        Simpan Data
+                        :disabled="submitting || !canSubmit"
+                        class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50">
+                        {{ submitting ? 'Menyimpan...' : 'Simpan Data' }}
                     </button>
                 </div>
             </div>
@@ -345,7 +354,10 @@ const perPage = 5
 const showModal = ref(false)
 const showDelete = ref(false)
 const isEdit = ref(false)
+const submitting = ref(false)
+const errorMsg = ref('')
 const selectedId = ref<string | null>(null)
+const { getFriendlyErrorMessage } = useFriendlyError()
 
 const { distributors, fetchDistributor } = useDistributor()
 const {
@@ -407,6 +419,26 @@ const getInitial = (value?: string) => {
     return value?.charAt(0).toUpperCase() || '?'
 }
 
+const normalizedStok = computed(() => Math.trunc(Number(form.value.stok || 0)))
+const normalizedHarga = computed(() => Math.trunc(Number(form.value.harga || 0)))
+
+const canSubmit = computed(() => {
+    return !!form.value.nama.trim()
+        && !!form.value.tipe
+        && normalizedStok.value >= 0
+        && normalizedHarga.value >= 0
+})
+
+const sanitizeStok = () => {
+    const parsedValue = Math.trunc(Number(form.value.stok || 0))
+    form.value.stok = Number.isFinite(parsedValue) && parsedValue >= 0 ? parsedValue : 0
+}
+
+const sanitizeHarga = () => {
+    const parsedValue = Math.trunc(Number(form.value.harga || 0))
+    form.value.harga = Number.isFinite(parsedValue) && parsedValue >= 0 ? parsedValue : 0
+}
+
 const resetForm = () => {
     form.value = {
         nama: '',
@@ -429,6 +461,7 @@ onMounted(async () => {
 const openCreate = () => {
     isEdit.value = false
     selectedId.value = null
+    errorMsg.value = ''
     resetForm()
     showModal.value = true
 }
@@ -436,6 +469,7 @@ const openCreate = () => {
 const openEdit = (item: any) => {
     isEdit.value = true
     selectedId.value = item.id
+    errorMsg.value = ''
     showModal.value = true
 
     form.value = {
@@ -455,18 +489,42 @@ const openDelete = (item: any) => {
 
 const closeModal = () => {
     showModal.value = false
+    errorMsg.value = ''
     resetForm()
 }
 
 const submitForm = async () => {
-    if (isEdit.value && selectedId.value) {
-        await updateObat(selectedId.value, form.value)
-    } else {
-        await createObat(form.value)
+    errorMsg.value = ''
+    sanitizeStok()
+    sanitizeHarga()
+
+    if (!canSubmit.value) {
+        errorMsg.value = 'Nama, tipe, stok, dan harga harus valid. Stok serta harga tidak boleh minus.'
+        return
     }
 
-    showModal.value = false
-    resetForm()
+    submitting.value = true
+
+    try {
+        const payload = {
+            ...form.value,
+            stok: normalizedStok.value,
+            harga: normalizedHarga.value
+        }
+
+        if (isEdit.value && selectedId.value) {
+            await updateObat(selectedId.value, payload)
+        } else {
+            await createObat(payload)
+        }
+
+        showModal.value = false
+        resetForm()
+    } catch (error) {
+        errorMsg.value = getFriendlyErrorMessage(error, 'Data obat belum berhasil disimpan.')
+    } finally {
+        submitting.value = false
+    }
 }
 
 const confirmDelete = async () => {
