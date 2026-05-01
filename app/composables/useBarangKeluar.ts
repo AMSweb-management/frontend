@@ -2,13 +2,10 @@ export const useBarangKeluar = () => {
     const config = useRuntimeConfig()
 
     const data = useState<any[]>('barang_keluar', () => [])
-    const pagination = useState<any>('bk_pagination', () => ({}))
 
-    const fetchData = async (page = 1) => {
-        const res: any = await $fetch(`${config.public.apiBase}/barang-keluar?page=${page}`)
-
-        data.value = res.data
-        pagination.value = res
+    const fetchData = async () => {
+        const res: any = await $fetch(`${config.public.apiBase}/barang-keluar`)
+        data.value = res.data || res
     }
 
     const createData = async (payload: any) => {
@@ -22,7 +19,6 @@ export const useBarangKeluar = () => {
 
     return {
         data,
-        pagination,
         fetchData,
         createData
     }

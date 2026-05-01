@@ -386,7 +386,7 @@ const expiringMedicines = computed(() => {
 
 onMounted(async () => {
     await Promise.all([
-        fetchData(1),
+        fetchData(),
         fetchDashboard(),
         fetchObat()
     ])

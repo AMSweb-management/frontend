@@ -77,7 +77,7 @@
 
                 <div class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm text-slate-600">
                     <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
-                    Halaman {{ safePagination.current_page }} dari {{ safePagination.last_page }}
+                    Halaman {{ page }} dari {{ totalPage || 1 }}
                 </div>
             </div>
 
@@ -149,15 +149,15 @@
 
                 <div class="flex items-center gap-3">
                     <button
-                        @click="fetchData(safePagination.current_page - 1)"
-                        :disabled="!safePagination.prev_page_url"
+                        @click="page--"
+                        :disabled="page === 1"
                         class="inline-flex items-center rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40">
                         Sebelumnya
                     </button>
 
                     <button
-                        @click="fetchData(safePagination.current_page + 1)"
-                        :disabled="!safePagination.next_page_url"
+                        @click="page++"
+                        :disabled="page >= totalPage"
                         class="inline-flex items-center rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40">
                         Berikutnya
                     </button>
@@ -248,22 +248,22 @@ useHead({
     title: "Barang Keluar"
 })
 
-const { data, fetchData, createData, pagination } = useBarangKeluar()
+const { data, fetchData, createData } = useBarangKeluar()
 const { obats, fetchObat } = useObat()
 const loadingPage = ref(true)
 const submitting = ref(false)
 const errorMsg = ref('')
+const page = ref(1)
+const perPage = 5
 const { getFriendlyErrorMessage } = useFriendlyError()
 
-const safePagination = computed(() => ({
-    current_page: pagination.value?.current_page || 1,
-    last_page: pagination.value?.last_page || 1,
-    next_page_url: pagination.value?.next_page_url,
-    prev_page_url: pagination.value?.prev_page_url
-}))
-
 const displayedData = computed(() => {
-    return data.value.slice(0, 5)
+    const start = (page.value - 1) * perPage
+    return data.value.slice(start, start + perPage)
+})
+
+const totalPage = computed(() => {
+    return Math.ceil(data.value.length / perPage)
 })
 
 const totalJumlah = computed(() => {
@@ -295,7 +295,7 @@ const getInitial = (value?: string) => {
 }
 
 onMounted(async () => {
-    await fetchData(1)
+    await fetchData()
     await fetchObat()
     setTimeout(() => {
         loadingPage.value = false
@@ -402,6 +402,17 @@ watch(() => form.value.obat_id, () => {
 
     if (normalizedJumlah.value > availableStock.value) {
         form.value.jumlah = availableStock.value
+    }
+})
+
+watch(totalPage, (value) => {
+    if (!value) {
+        page.value = 1
+        return
+    }
+
+    if (page.value > value) {
+        page.value = value
     }
 })
 
