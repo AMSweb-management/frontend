@@ -255,9 +255,15 @@
                             <select v-model="form.tipe"
                                 class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100">
                                 <option value="">Pilih Tipe</option>
-                                <option>Tablet</option>
-                                <option>Sirup</option>
-                                <option>Kapsul</option>
+                                <option>Tablet Bebas</option>
+                                <option>Sirup Bebas</option>
+                                <option>Obat Bebas</option>
+                                <option>Alat Kesehatan</option>
+                                <option>Madu</option>
+                                <option>Vitamin</option>
+                                <option>Obat Keras Tablet</option>
+                                <option>Obat Keras Sirup</option>
+                                <option>Salep</option>
                             </select>
                         </div>
 
